@@ -5,6 +5,6 @@ export const modalBackground = {
       ")",
     backgroundPosition: "center",
     backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
+    backgroundRepeat: "no-repeat"
   };
 

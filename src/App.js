@@ -8,46 +8,50 @@ function App() {
   const [cocktail, setCocktail] = useState({});
   const [ingredients, setIngredients] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showAlcholicDrinks, setShowAlcholicDrinks] = useState(true);
 
   //#region fetchCocktail
-  //fetch cocktail handles fectch to API.
-  //implements logic that filters out non-alcoholic drinks
   const fetchCocktail = () => {
     setIsLoading(true);
     fetch("https://www.thecocktaildb.com/api/json/v1/1/random.php")
       .then((response) => response.json())
       .then((result) => {
-        if (result.drinks[0].strAlcoholic === "Alcoholic") {
+          let drink = result.drinks[0];
           let tempArr = [];
+
+          if ( drink.strAlcoholic === "Alcoholic" && !showAlcholicDrinks ){
+            fetchCocktail();
+            return;
+          }
+
           for (let i = 0; i <= 15; i++) {
-            if (
-              //this is checking if there is a truthy value for ingredients and measurements
-              //because the API has anywhere from 1-15 empty values that I dont want to display
-              result.drinks[0]["strIngredient" + i] &&
-              result.drinks[0]["strMeasure" + i]
-            )
-              tempArr.push(
-                result.drinks[0]["strIngredient" + i] +
-                  " " +
-                  result.drinks[0]["strMeasure" + i]
-              );
+            let ingredient = drink["strIngredient" + i];
+            let measurement = drink["strMeasure" + i];
+
+            if (ingredient && measurement)
+              tempArr.push(`${ingredient} ${measurement}`);
           }
           setIngredients(tempArr);
-          setCocktail(result.drinks[0]);
-        } else {
-          //runs function again if drink is not alcoholic
-          fetchCocktail();
-        }
-        setIsLoading(false);
+          setCocktail(drink);
+          setIsLoading(false);
       });
   };
-
   //#endregion
 
   return (
     <>
-      <div className="backgroundImg">
+      <div className="backgroundImg" >
         <ModalComp />
+        <div className="nonAlcohlicSwitchContainer">
+          <span>Don't show alcoholic drinks</span>
+          <label className="switch">
+            <input 
+              type="checkbox" 
+              onChange={()=>setShowAlcholicDrinks(!showAlcholicDrinks)}>
+            </input>
+            <span className="slider round"></span>
+          </label>
+        </div>
         <RandomCocktailDisplay
           isLoading={isLoading}
           cocktail={cocktail}
