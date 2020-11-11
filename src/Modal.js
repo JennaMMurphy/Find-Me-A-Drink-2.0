@@ -15,14 +15,16 @@ function ModalComp() {
   const validateAge = () => {
     const age = moment().diff(userBirthday, "days");
     if (age >= 6575) {
-      //person is over 18 and will be allowed access to site and close modal
-      setShow(false)
+      //person is over 18 and will be allowed access to site
+      setShow(false);
       setUser18AndUp(true);
-    } else if (age === 0) {
+
+    } else if (!age) {
       //if they don't enter an age
       setAgeErrorMessage("Oops! You didn't enter your birthday");
       setUser18AndUp(false);
       window.navigator.vibrate(500);
+
     } else if (age < 6575) {
       //if they're under 18
       setAgeErrorMessage("Please return when you're 18");
@@ -35,8 +37,7 @@ function ModalComp() {
     <>
       <Modal
         className="text-center"
-        onHide={()=>setShow(false)}
-        //remove onHide later; it closes modal when clicked, but it's just more convient when developing than having to enter bday everytime
+        backdrop="static"
         show={show}
         style={modalBackground}
       >
@@ -50,7 +51,7 @@ function ModalComp() {
           Please enter your birthdate
           <br />
           <br />
-          <AgeInput setUserBirthday={setUserBirthday} />
+          <AgeInput setUserBirthday={setUserBirthday} validateAge={validateAge} />
         </Modal.Body>
         {/* conditional render for if person is under 18 or didnot enter their age, it will give message */}
         {user18AndUp === false ? (

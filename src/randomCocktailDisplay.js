@@ -12,11 +12,12 @@ function RandomCocktailDisplay({
   //conditional render of loading while fetch is being handled. after loaded it displays name of cocktail
   const nameOrLoadingDisplay = isLoading ? "Loading..." : cocktail.strDrink;
   return (
-    <div className="container">
-      <h1 className="cocktailName lead">
-        {" "}
-        <span>{nameOrLoadingDisplay}</span>
-      </h1>
+    <div className="container"> 
+      {cocktail.strDrink ? (      
+        <h1 className="cocktailName lead">
+          <span>{nameOrLoadingDisplay}</span>
+        </h1>
+      ) : null}
       {/* conditional render for border of img; if image is loaded into state then display; if not then do nothing */}
       {cocktail.strDrinkThumb ? (
         <img
@@ -26,8 +27,8 @@ function RandomCocktailDisplay({
         />
       ) : null}
       <div className="cocktailIngredientsContainer">
-        {ingredients.map(drinkingredients => (
-          <IngredientsList key={cocktail.id} ingredients={drinkingredients} />
+        {ingredients.map((drinkIngredients, i) => (
+          <IngredientsList key={i} ingredients={drinkIngredients} />
         ))}
       </div>
       <button
